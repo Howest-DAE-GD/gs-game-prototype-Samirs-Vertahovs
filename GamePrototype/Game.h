@@ -1,5 +1,9 @@
 #pragma once
 #include "BaseGame.h"
+#include "Camera.h"
+#include "Player.h"
+#include "NPC.h"
+#include "Texture.h"
 class Game : public BaseGame
 {
 public:
@@ -22,6 +26,15 @@ public:
 	void ProcessMouseUpEvent( const SDL_MouseButtonEvent& e ) override;
 
 private:
+
+	Camera* m_ptrCamera;
+	Player* m_ptrPlayer;
+	std::vector<NPC*> m_VectorNPCs;
+
+	double m_Timer;
+	float m_DeathTimer;
+
+	//Texture m_StringTexture;
 
 	// FUNCTIONS
 	void Initialize();

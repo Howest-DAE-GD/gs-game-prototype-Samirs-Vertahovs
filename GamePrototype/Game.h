@@ -25,14 +25,32 @@ public:
 	void ProcessMouseDownEvent( const SDL_MouseButtonEvent& e ) override;
 	void ProcessMouseUpEvent( const SDL_MouseButtonEvent& e ) override;
 
+	enum class GameState {
+		level1play,
+		level2play,
+		level3play,
+		pause
+	};
+
 private:
 
 	Camera* m_ptrCamera;
 	Player* m_ptrPlayer;
 	std::vector<NPC*> m_VectorNPCs;
+	Texture* m_ptrMap;
 
 	double m_Timer;
 	float m_DeathTimer;
+	Point2f m_MousePointer;
+
+	int m_NumberOfEnemies;
+	int m_NumberOfCivs;
+
+	int m_EntityCount;
+
+	float m_NPCwidth;
+
+	Rectf m_MapBounds{ 0.0f, 0.0f, 4000.0f, 3000.0f };
 
 	//Texture m_StringTexture;
 

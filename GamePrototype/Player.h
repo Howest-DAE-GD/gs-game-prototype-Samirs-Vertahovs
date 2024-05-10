@@ -14,7 +14,12 @@ public:
 	void Update(float elapsedSec, std::vector<NPC*>& enemies, const Uint8* pStates);
 	void Draw() const;
 	void Shoot(const Point2f& direction);
+	bool DoHitTest(const Rectf& bullet);
 	void Die();
+	void SetAlive();
+	void SetPos(const Point2f& pos);
+
+
 	Point2f GetPosition() const;
 	Vector2f GetVelocity() const;
 
@@ -30,5 +35,6 @@ private:
 	Rectf m_FieldBoundaries;
 	float m_BulletSpeed;
 	bool m_Alive;
+	int	 m_Counter;
 };
 

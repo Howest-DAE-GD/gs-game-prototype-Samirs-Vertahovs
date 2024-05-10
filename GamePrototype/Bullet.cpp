@@ -1,31 +1,80 @@
 #include "pch.h"
 #include "Bullet.h"
+#include "Player.h"
 #include <iostream>
+
+Bullet::Bullet(float width, float height, const Rectf& fieldboundaries, Player* player) :
+	m_Position			{ },
+	m_Width				{ width },
+	m_Height			{ height },
+	m_FieldBoundaries	{ fieldboundaries },
+	m_IsActivated		{ false },
+	m_Time				{ },
+	m_PtrPlayer			{ player }
+{
+
+}
 
 Bullet::Bullet(float width, float height, const Rectf& fieldboundaries) :
 	m_Position			{ },
 	m_Width				{ width },
 	m_Height			{ height },
 	m_FieldBoundaries	{ fieldboundaries },
-	m_IsActivated		{ false }
+	m_IsActivated		{ false },
+	m_Time				{ },
+	m_PtrPlayer			{ nullptr }
 {
 
 }
+
 Bullet::~Bullet()
 {
 
 }
 
-void Bullet::Update(float elapsedSec, std::vector<NPC*>& npcs)
+void Bullet::Update(float elapsedSec, std::vector<NPC*>& npcs, int& counter)
 {
 	if (m_IsActivated)
 	{
 		m_Position.x += m_Velocity.x * elapsedSec;
 		m_Position.y += m_Velocity.y * elapsedSec;
 
-		CheckHit(npcs);
+		CheckHit(npcs, counter);
 
 		CheckBoundaries();
+
+		m_Time += elapsedSec;
+	}
+
+	if (m_Time >= 1.0f)
+	{
+		m_IsActivated = false;
+		m_Time = 0.0f;
+	}
+}
+
+void Bullet::Update(float elapsedSec)
+{
+	if (m_IsActivated)
+	{
+		m_Position.x += m_Velocity.x * elapsedSec;
+		m_Position.y += m_Velocity.y * elapsedSec;
+
+		if (m_PtrPlayer->DoHitTest(Rectf{ m_Position.x, m_Position.y, m_Width, m_Height }))
+		{
+			m_IsActivated = false;
+			m_PtrPlayer->Die();
+		}
+
+		CheckBoundaries();
+
+		m_Time += elapsedSec;
+	}
+
+	if (m_Time >= 1.8f)
+	{
+		m_IsActivated = false;
+		m_Time = 0.0f;
 	}
 }
 
@@ -54,15 +103,26 @@ void Bullet::CheckBoundaries()
 	{
 		m_IsActivated = false;
 	}
+
+
 }
 
-void Bullet::CheckHit(std::vector<NPC*>& npcs)
+void Bullet::CheckHit(std::vector<NPC*>& npcs, int& counter)
 {
 	for (NPC* npc : npcs)
 	{
 		if (npc->DoHitTest(Rectf{ m_Position.x, m_Position.y, m_Width, m_Height }))
 		{
+			if (npc->IsEnemy())
+			{
+				counter += 1;
+			}
+			else
+			{
+				counter -= 1;
+			}
 			m_IsActivated = false;
 		}
 	}
+
 }

@@ -5,6 +5,35 @@ Game::Game( const Window& window )
 	:BaseGame{ window }
 {
 	Initialize();
+
+	//for (m_EntityCount; m_EntityCount < m_VectorNPCs.size(); ++m_EntityCount)
+	//{
+	//	if (m_NumberOfEnemies < 3)
+	//	{
+	//		int index = rand() % m_VectorNPCs.size();
+
+	//		if (!m_VectorNPCs[index]->IsEnemy())
+	//		{
+	//			m_VectorNPCs[index] = new NPC(m_VectorNPCs[index]->GetPosition(), m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer); // Change it to true
+	//			m_NumberOfEnemies++;
+	//			m_NumberOfCivs--;
+	//		}
+
+	//	}
+	//	else if (m_NumberOfCivs < 2)
+	//	{
+	//		int index = rand() % m_VectorNPCs.size();
+
+	//		if (m_VectorNPCs[index]->IsEnemy())
+	//		{
+	//			m_VectorNPCs[index] = new NPC(m_VectorNPCs[index]->GetPosition(), m_NPCwidth, m_NPCwidth, false, m_MapBounds, m_ptrPlayer); // Change it to true
+	//			m_NumberOfCivs++;
+	//			m_NumberOfEnemies--;
+	//		}
+
+	//	}
+	//}
+	
 }
 
 Game::~Game( )
@@ -16,13 +45,29 @@ void Game::Initialize( )
 {
 	m_ptrCamera = new Camera(850.0f, 500.0f);
 	m_ptrPlayer = new Player(Point2f{ 2000.0f, 1500.0f }, 35.0f, 35.0f, Rectf{ 0.0f, 0.0f, 4000.0f, 3000.0f });
+	m_ptrMap = new Texture("Map.png");
 
-	m_VectorNPCs.push_back(new NPC(Point2f{ 2300.0f, 1750.0f }, 30.0f, 30.0f, true));
-	m_VectorNPCs.push_back(new NPC(Point2f{ 1400.0f, 1400.0f }, 30.0f, 30.0f, true));
-	m_VectorNPCs.push_back(new NPC(Point2f{ 1854.0f, 1558.0f }, 30.0f, 30.0f, true));
-	m_VectorNPCs.push_back(new NPC(Point2f{ 2100.0f, 2140.0f }, 30.0f, 30.0f, true));
-	m_VectorNPCs.push_back(new NPC(Point2f{ 2600.0f,  700.0f }, 30.0f, 30.0f, true));
+	m_NPCwidth = 30.0f;
 
+	m_EntityCount = 0;
+
+	m_VectorNPCs.push_back(new NPC(Point2f{ 2300.0f, 1750.0f }, m_NPCwidth, m_NPCwidth, rand() % 2 == 0, m_MapBounds, m_ptrPlayer));
+	m_VectorNPCs.push_back(new NPC(Point2f{ 1400.0f, 1400.0f }, m_NPCwidth, m_NPCwidth, rand() % 2 == 0, m_MapBounds, m_ptrPlayer));
+	m_VectorNPCs.push_back(new NPC(Point2f{ 1854.0f, 1558.0f }, m_NPCwidth, m_NPCwidth, rand() % 2 == 0, m_MapBounds, m_ptrPlayer));
+	m_VectorNPCs.push_back(new NPC(Point2f{ 2100.0f, 1840.0f }, m_NPCwidth, m_NPCwidth, rand() % 2 == 0, m_MapBounds, m_ptrPlayer));
+	m_VectorNPCs.push_back(new NPC(Point2f{ 2600.0f,  700.0f }, m_NPCwidth, m_NPCwidth, rand() % 2 == 0, m_MapBounds, m_ptrPlayer));
+
+	for (int index{}; index < m_VectorNPCs.size(); ++index)
+	{
+		if (m_VectorNPCs[index]->IsEnemy())
+		{
+			m_NumberOfEnemies++;
+		}
+		else
+		{
+			m_NumberOfCivs++;
+		}
+	}
 
 	m_Timer = 30.0;
 	m_DeathTimer = 5.0f;
@@ -32,6 +77,7 @@ void Game::Cleanup( )
 {
 	delete m_ptrCamera;
 	delete m_ptrPlayer;
+	delete m_ptrMap;
 
 	for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
 	{
@@ -57,6 +103,22 @@ void Game::Update( float elapsedSec )
 	{
 		m_ptrPlayer->Die();
 	}
+
+
+	for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+	{
+		m_VectorNPCs[index]->Draw();
+	}
+
+	for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+	{
+		m_VectorNPCs[index]->Update(elapsedSec);
+	}
+
+	for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+	{
+		m_VectorNPCs[index]->Shoot(m_ptrPlayer->GetPosition());
+	}
 }
 
 void Game::Draw( ) const
@@ -65,11 +127,16 @@ void Game::Draw( ) const
 
 	m_ptrCamera->Aim(4000.0f, 3000.0f, m_ptrPlayer->GetPosition());
 
+	for (int index{}; index < 8; ++index)
+	{
+		for (int index2{}; index2 < 6; ++index2)
+		{
+			m_ptrMap->Draw(Point2f{ 0.0f + m_ptrMap->GetWidth() * index, 0.0f + m_ptrMap->GetHeight() * index2});
+		}
+	}
+
 	SetColor(Color4f{ 1.0f, 0.0f, 0.0f, 1.0f });
 	DrawRect(0.0f, 0.0f, 3000.0f, 2000.0f, 20.0f);
-
-	SetColor(Color4f{ 0.0f, 1.0f, 0.0f, 1.0f });
-	FillRect(2000.0f, 1450.0f, 40.0f, 40.0f);
 
 	m_ptrPlayer->Draw();
 
@@ -77,6 +144,8 @@ void Game::Draw( ) const
 	{
 		m_VectorNPCs[index]->Draw();
 	}
+
+	utils::DrawLine(Point2f{ m_ptrPlayer->GetPosition().x + 17.5f, m_ptrPlayer->GetPosition().y + 17.5f}, Point2f{(m_MousePointer.x + m_ptrPlayer->GetPosition().x - 850.0f * 0.5f), (m_MousePointer.y + m_ptrPlayer->GetPosition().y - 500.0f * 0.5f)});
 
 	m_ptrCamera->Reset();
 
@@ -91,7 +160,20 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 {
 	switch (e.keysym.sym)
 	{
-	case SDLK_UP:
+	case SDLK_r:
+
+		m_Timer = 30.0;
+		m_DeathTimer = 5.0f;
+
+		for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+		{
+			m_VectorNPCs[index]->SetAlive();
+		}
+
+		m_ptrPlayer->SetAlive();
+
+		m_ptrPlayer->SetPos(Point2f{ 2000.0f, 1500.0f });
+
 		break;
 	}
 }
@@ -99,6 +181,9 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 void Game::ProcessMouseMotionEvent( const SDL_MouseMotionEvent& e )
 {
 	//std::cout << "MOUSEMOTION event: " << e.x << ", " << e.y << std::endl;
+
+	m_MousePointer.x = e.x;
+	m_MousePointer.y = e.y;
 }
 
 void Game::ProcessMouseDownEvent( const SDL_MouseButtonEvent& e )

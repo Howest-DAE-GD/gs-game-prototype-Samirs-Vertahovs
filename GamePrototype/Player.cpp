@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Player.h"
+#include <iostream>
 
 Player::Player(const Point2f& pos, float width, float height, const Rectf& fieldboundaries) :
 	m_Position			{ pos },
@@ -9,13 +10,14 @@ Player::Player(const Point2f& pos, float width, float height, const Rectf& field
 	m_Velocity			{ 0.0f, 0.0f },
 	m_BulletSpeed		{ },
 	m_Alive				{ true },
-	m_Bounds			{ }
+	m_Bounds			{ },
+	m_Counter			{ }
 {
 	m_Bounds.left		= m_Position.x;
 	m_Bounds.bottom		= m_Position.y;
 	m_Bounds.width		= m_Width;
 	m_Bounds.height		= m_Height;
-	m_PtrBullet			= new Bullet(5.0f, 5.0f, m_FieldBoundaries);
+	m_PtrBullet			= new Bullet(6.0f, 6.0f, m_FieldBoundaries);
 }
 Player::~Player()
 {
@@ -26,8 +28,7 @@ void Player::Update(float elapsedSec, std::vector<NPC*>& npcs, const Uint8* pSta
 {
 	bool check = false;
 
-	m_PtrBullet->Update(elapsedSec, npcs);
-
+	m_PtrBullet->Update(elapsedSec, npcs, m_Counter);
 
 	if (m_Alive)
 	{
@@ -67,11 +68,26 @@ void Player::Update(float elapsedSec, std::vector<NPC*>& npcs, const Uint8* pSta
 		m_Velocity.y = 0.0f;
 	}
 
+	m_Bounds.left = m_Position.x;
+	m_Bounds.bottom = m_Position.y;
+	m_Bounds.width = m_Width;
+	m_Bounds.height = m_Height;
+
+	std::cout << m_Counter << std::endl;
+
 }
 
 void Player::Draw() const
 {
-	SetColor(Color4f{ 1.0f, 1.0f, 0.0f, 1.0f });
+	if (m_Alive)
+	{
+		SetColor(Color4f{ 1.0f, 0.4117f, 0.7058f, 1.0f });
+	}
+	else
+	{
+		SetColor(Color4f{ 0.35f, 0.35f, 0.35f, 1.0f });
+	}
+
 	FillRect(m_Bounds);
 	m_PtrBullet->Draw();
 }
@@ -83,7 +99,19 @@ void Player::Shoot(const Point2f& direction) //add dependancy on the click direc
 
 	if (m_Alive)
 	{
-		m_PtrBullet->Shoot(Point2f{ m_Position.x, m_Position.y }, Vector2f{ 800.0f * Normalized.x, 800.0f * Normalized.y });
+		m_PtrBullet->Shoot(Point2f{ m_Position.x + 17.5f, m_Position.y + 17.5f }, Vector2f{ 800.0f * Normalized.x, 800.0f * Normalized.y });
+	}
+}
+
+bool Player::DoHitTest(const Rectf& bullet)
+{
+	if (IsOverlapping(bullet, m_Bounds) and m_Alive)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
@@ -105,5 +133,15 @@ Rectf Player::GetBounds() const
 void Player::Die()
 {
 	m_Alive = false;
+}
+
+void Player::SetAlive()
+{
+	m_Alive = true;
+}
+
+void Player::SetPos(const Point2f& pos)
+{
+	m_Position = pos;
 }
 

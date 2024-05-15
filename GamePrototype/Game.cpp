@@ -5,35 +5,28 @@ Game::Game( const Window& window )
 	:BaseGame{ window }
 {
 	Initialize();
-
-	//for (m_EntityCount; m_EntityCount < m_VectorNPCs.size(); ++m_EntityCount)
-	//{
-	//	if (m_NumberOfEnemies < 3)
-	//	{
-	//		int index = rand() % m_VectorNPCs.size();
-
-	//		if (!m_VectorNPCs[index]->IsEnemy())
-	//		{
-	//			m_VectorNPCs[index] = new NPC(m_VectorNPCs[index]->GetPosition(), m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer); // Change it to true
-	//			m_NumberOfEnemies++;
-	//			m_NumberOfCivs--;
-	//		}
-
-	//	}
-	//	else if (m_NumberOfCivs < 2)
-	//	{
-	//		int index = rand() % m_VectorNPCs.size();
-
-	//		if (m_VectorNPCs[index]->IsEnemy())
-	//		{
-	//			m_VectorNPCs[index] = new NPC(m_VectorNPCs[index]->GetPosition(), m_NPCwidth, m_NPCwidth, false, m_MapBounds, m_ptrPlayer); // Change it to true
-	//			m_NumberOfCivs++;
-	//			m_NumberOfEnemies--;
-	//		}
-
-	//	}
-	//}
 	
+	for (int index{}; index < m_VectorNPCs.size(); ++index)
+	{
+		if (m_NumberOfCivs < 2)
+		{
+			int indexToChange{ rand() % 5 };
+
+			if (m_VectorNPCs[indexToChange]->IsEnemy())
+			{
+				m_NumberOfCivs++;
+				m_VectorNPCs[indexToChange]->SetHostility(false);
+			}
+			else
+			{
+				index -= 1;
+			}
+		}
+		else
+		{
+			break;
+		}
+	}
 }
 
 Game::~Game( )
@@ -49,25 +42,13 @@ void Game::Initialize( )
 
 	m_NPCwidth = 30.0f;
 
-	m_EntityCount = 0;
+	m_NumberOfCivs = 0;
 
-	m_VectorNPCs.push_back(new NPC(Point2f{ 2300.0f, 1750.0f }, m_NPCwidth, m_NPCwidth, rand() % 2 == 0, m_MapBounds, m_ptrPlayer));
-	m_VectorNPCs.push_back(new NPC(Point2f{ 1400.0f, 1400.0f }, m_NPCwidth, m_NPCwidth, rand() % 2 == 0, m_MapBounds, m_ptrPlayer));
-	m_VectorNPCs.push_back(new NPC(Point2f{ 1854.0f, 1558.0f }, m_NPCwidth, m_NPCwidth, rand() % 2 == 0, m_MapBounds, m_ptrPlayer));
-	m_VectorNPCs.push_back(new NPC(Point2f{ 2100.0f, 1840.0f }, m_NPCwidth, m_NPCwidth, rand() % 2 == 0, m_MapBounds, m_ptrPlayer));
-	m_VectorNPCs.push_back(new NPC(Point2f{ 2600.0f,  700.0f }, m_NPCwidth, m_NPCwidth, rand() % 2 == 0, m_MapBounds, m_ptrPlayer));
-
-	for (int index{}; index < m_VectorNPCs.size(); ++index)
-	{
-		if (m_VectorNPCs[index]->IsEnemy())
-		{
-			m_NumberOfEnemies++;
-		}
-		else
-		{
-			m_NumberOfCivs++;
-		}
-	}
+	m_VectorNPCs.push_back(new NPC(Point2f{ 2300.0f, 1750.0f }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
+	m_VectorNPCs.push_back(new NPC(Point2f{ 1400.0f, 1400.0f }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
+	m_VectorNPCs.push_back(new NPC(Point2f{ 1854.0f, 1558.0f }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
+	m_VectorNPCs.push_back(new NPC(Point2f{ 2100.0f, 1840.0f }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
+	m_VectorNPCs.push_back(new NPC(Point2f{ 2600.0f,  700.0f }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
 
 	m_Timer = 30.0;
 	m_DeathTimer = 5.0f;
@@ -100,6 +81,11 @@ void Game::Update( float elapsedSec )
 	}
 
 	if (m_DeathTimer <= 0)
+	{
+		m_ptrPlayer->Die();
+	}
+
+	if (m_Timer <= 0)
 	{
 		m_ptrPlayer->Die();
 	}

@@ -145,3 +145,7 @@ void Player::SetPos(const Point2f& pos)
 	m_Position = pos;
 }
 
+bool Player::IsAlive() const
+{
+	return m_Alive;
+}

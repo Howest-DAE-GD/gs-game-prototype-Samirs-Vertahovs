@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "NPC.h"
 #include "Bullet.h"
+#include "Player.h"
 #include <iostream>
 
 NPC::NPC(const Point2f& pos, float width, float height, bool enemy, const Rectf& fieldboundaries, Player* player) :
@@ -38,6 +39,7 @@ void NPC::Draw() const
 		SetColor(Color4f{ 0.1f, 0.0f, 0.9f, 1.0f });
 		FillRect(m_Bounds);
 	}
+
 }
 
 void NPC::Update(float elapsedSec)
@@ -63,7 +65,7 @@ void NPC::Shoot(const Point2f& direction)
 	Vector2f DirVector{ direction.x - m_Position.x, direction.y - m_Position.y };
 	Vector2f Normalized{ DirVector.Normalized() };
 
-	if (m_IsEnemy and !m_IsDead)
+	if (m_IsEnemy and !m_IsDead and m_PtrPlayer->IsAlive())
 	{
 		m_PtrBullet->Shoot(Point2f{ m_Position.x, m_Position.y }, Vector2f{ 600.0f * Normalized.x, 600.0f * Normalized.y });
 	}
@@ -103,4 +105,9 @@ Point2f NPC::GetPosition() const
 void NPC::SetAlive()
 {
 	m_IsDead = false;
+}
+
+void NPC::SetHostility(bool isEnemy)
+{
+	m_IsEnemy = isEnemy;
 }

@@ -19,7 +19,7 @@ public:
 	void SetAlive();
 	void SetPos(const Point2f& pos);
 
-
+	bool IsAlive() const;
 	Point2f GetPosition() const;
 	Vector2f GetVelocity() const;
 

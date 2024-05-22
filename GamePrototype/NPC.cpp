@@ -12,6 +12,8 @@ NPC::NPC(const Point2f& pos, float width, float height, bool enemy, const Rectf&
 	m_IsDead{ false },
 	m_IsEnemy{ enemy },
 	m_Bounds { },
+	m_MovingPeriod{ },
+	m_Velocity{ },
 	m_PtrPlayer{ player }
 {
 	m_Bounds.left = m_Position.x;
@@ -28,15 +30,21 @@ NPC::~NPC()
 
 void NPC::Draw() const
 {
-	if (m_IsDead == false and m_IsEnemy == true)
+	if (!m_IsDead and m_IsEnemy)
 	{
-		SetColor(Color4f{ 0.9f, 0.0f, 0.1f, 1.0f });
+		SetColor(Color4f{ 230 / 255.0f, 60 / 255.0f, 60 / 255.0f, 1.0f });
+		FillRect(Rectf{ m_Bounds.left - 3.0f, m_Bounds.bottom - 3.0f, m_Bounds.width + 6.0f, m_Bounds.height + 6.0f });
+
+		SetColor(Color4f{ 250 / 255.0f, 90 / 255.0f, 90 / 255.0f, 1.0f });
 		FillRect(m_Bounds);
 		m_PtrBullet->Draw();
 	}
-	else if (m_IsDead == false)
+	else if (!m_IsDead)
 	{
-		SetColor(Color4f{ 0.1f, 0.0f, 0.9f, 1.0f });
+		SetColor(Color4f{ 99 / 255.0f, 87 / 255.0f, 220 / 255.0f, 1.0f });
+		FillRect(Rectf{ m_Bounds.left - 3.0f, m_Bounds.bottom - 3.0f, m_Bounds.width + 6.0f, m_Bounds.height + 6.0f });
+
+		SetColor(Color4f{ 129 / 255.0f, 117 / 255.0f, 250 / 255.0f, 1.0f });
 		FillRect(m_Bounds);
 	}
 
@@ -45,6 +53,49 @@ void NPC::Draw() const
 void NPC::Update(float elapsedSec)
 {
 	m_PtrBullet->Update(elapsedSec);
+
+	if (m_MovingPeriod > 0.0f)
+	{
+		m_MovingPeriod -= elapsedSec;
+	}
+
+	if (m_MovingPeriod < 0.0f)
+	{
+		m_MovingPeriod = 0.0f;
+	}
+
+	if (m_MovingPeriod == 0.0f)
+	{
+		m_Velocity.x = rand() % 401 - 200.0f;
+		m_Velocity.y = rand() % 401 - 200.0f;
+		m_MovingPeriod = 2.25f;
+	}
+
+	m_Position.x += m_Velocity.x * elapsedSec;
+	m_Position.y += m_Velocity.y * elapsedSec;
+
+	m_Bounds.left = m_Position.x;
+	m_Bounds.bottom = m_Position.y;
+
+	if (m_Position.x < 0.0f)
+	{
+		m_Position.x = 0.0f;
+	}
+
+	if (m_Position.x > 2970.0f)
+	{
+		m_Position.x = 2970.0f;
+	}
+
+	if (m_Position.y < 0.0f)
+	{
+		m_Position.y = 0.0f;
+	}
+
+	if (m_Position.y > 1970.0f)
+	{
+		m_Position.y = 1970.0f;
+	}
 }
 
 bool NPC::DoHitTest(const Rectf& bullet)

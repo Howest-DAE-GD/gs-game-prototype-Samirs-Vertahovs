@@ -50,7 +50,7 @@ private:
 
 	float m_NPCwidth;
 
-	Rectf m_MapBounds{ 0.0f, 0.0f, 4000.0f, 3000.0f };
+	Rectf m_MapBounds{ 0.0f, 0.0f, 3000.0f, 2000.0f };
 
 	//Texture m_StringTexture;
 

@@ -18,6 +18,7 @@ public:
 	void Die();
 	void SetAlive();
 	void SetPos(const Point2f& pos);
+	void SetCounter(int counter);
 
 	bool IsAlive() const;
 	Point2f GetPosition() const;

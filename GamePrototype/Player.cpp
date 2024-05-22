@@ -73,12 +73,24 @@ void Player::Update(float elapsedSec, std::vector<NPC*>& npcs, const Uint8* pSta
 	m_Bounds.width = m_Width;
 	m_Bounds.height = m_Height;
 
-	std::cout << m_Counter << std::endl;
+	//std::cout << m_Counter << std::endl;
 
 }
 
 void Player::Draw() const
 {
+
+	if (m_Alive)
+	{
+		SetColor(Color4f{ 0.8f, 0.2117f, 0.5058f, 1.0f });
+	}
+	else
+	{
+		SetColor(Color4f{ 0.1f, 0.1f, 0.1f, 1.0f });
+	}
+
+	FillRect(Rectf{ m_Bounds.left - 3.0f, m_Bounds.bottom - 3.0f, m_Bounds.width + 6.0f, m_Bounds.height + 6.0f  });
+
 	if (m_Alive)
 	{
 		SetColor(Color4f{ 1.0f, 0.4117f, 0.7058f, 1.0f });
@@ -89,12 +101,65 @@ void Player::Draw() const
 	}
 
 	FillRect(m_Bounds);
+
 	m_PtrBullet->Draw();
 }
 
 void Player::Shoot(const Point2f& direction) //add dependancy on the click direction ---- DONE
 {
-	Vector2f DirVector{ (direction.x + m_Position.x - 850.0f * 0.5f) - m_Position.x, (direction.y + m_Position.y - 500.0f * 0.5f) - m_Position.y};
+	Point2f playerPos = m_Position;
+	Point2f start{ playerPos.x + 17.5f, playerPos.y + 17.5f };
+	Point2f end;
+
+	if (playerPos.x > 425.0f && playerPos.x < 2575.0f)
+	{
+		if (playerPos.y > 250.0f && playerPos.y < 1750.0f)
+		{
+			end = Point2f{ direction.x + playerPos.x - 850.0f * 0.5f, direction.y + playerPos.y - 500.0f * 0.5f };
+		}
+		else if (playerPos.y < 250.0f)
+		{
+			end = Point2f{ direction.x + playerPos.x - 850.0f * 0.5f, direction.y };
+		}
+		else if (playerPos.y > 1750.0f)
+		{
+			end = Point2f{ direction.x + playerPos.x - 850.0f * 0.5f, direction.y + (2000.0f - 500.0f) };
+		}
+	}
+	else if (playerPos.x < 425.0f)
+	{
+		if (playerPos.y > 250.0f && playerPos.y < 1750.0f)
+		{
+			end = Point2f{ direction.x, direction.y + playerPos.y - 500.0f * 0.5f };
+		}
+		else if (playerPos.y < 250.0f)
+		{
+			end = Point2f{ direction.x, direction.y };
+		}
+		else if (playerPos.y > 1750.0f)
+		{
+			end = Point2f{ direction.x, direction.y + (2000.0f - 500.0f) };
+		}
+	}
+	else if (playerPos.x > 2575.0f)
+	{
+		if (playerPos.y > 250.0f && playerPos.y < 1750.0f)
+		{
+			end = Point2f{ direction.x + (3000.0f - 850.0f), direction.y + playerPos.y - 500.0f * 0.5f };
+		}
+		else if (playerPos.y < 250.0f)
+		{
+			end = Point2f{ direction.x + (3000.0f - 850.0f), direction.y };
+		}
+		else if (playerPos.y > 1750.0f)
+		{
+			end = Point2f{ direction.x + (3000.0f - 850.0f), direction.y + (2000.0f - 500.0f) };
+		}
+	}
+
+
+	Vector2f DirVector{ start, end };
+
 	Vector2f Normalized{ DirVector.Normalized() };
 
 	if (m_Alive)
@@ -148,4 +213,9 @@ void Player::SetPos(const Point2f& pos)
 bool Player::IsAlive() const
 {
 	return m_Alive;
+}
+
+void Player::SetCounter(int counter) 
+{
+	m_Counter = counter;
 }

@@ -32,8 +32,10 @@ private:
 	Rectf	m_Bounds;
 	Rectf   m_FieldBoundaries;
 	Point2f m_Position;
+	Vector2f m_Velocity;
 	float	m_Width;
 	float	m_Height;
+	float   m_MovingPeriod;
 	bool	m_IsDead;
 	bool	m_IsEnemy;
 	Bullet* m_PtrBullet;

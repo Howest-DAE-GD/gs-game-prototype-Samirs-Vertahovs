@@ -37,18 +37,17 @@ Game::~Game( )
 void Game::Initialize( )
 {
 	m_ptrCamera = new Camera(850.0f, 500.0f);
-	m_ptrPlayer = new Player(Point2f{ 2000.0f, 1500.0f }, 35.0f, 35.0f, Rectf{ 0.0f, 0.0f, 4000.0f, 3000.0f });
+	m_ptrPlayer = new Player(Point2f{ 2000.0f, 1500.0f }, 35.0f, 35.0f, Rectf{ 0.0f, 0.0f, 3000.0f, 2000.0f });
 	m_ptrMap = new Texture("Map.png");
 
 	m_NPCwidth = 30.0f;
 
 	m_NumberOfCivs = 0;
 
-	m_VectorNPCs.push_back(new NPC(Point2f{ 2300.0f, 1750.0f }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
-	m_VectorNPCs.push_back(new NPC(Point2f{ 1400.0f, 1400.0f }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
-	m_VectorNPCs.push_back(new NPC(Point2f{ 1854.0f, 1558.0f }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
-	m_VectorNPCs.push_back(new NPC(Point2f{ 2100.0f, 1840.0f }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
-	m_VectorNPCs.push_back(new NPC(Point2f{ 2600.0f,  700.0f }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
+	for (int index{}; index < 5; ++index)
+	{
+		m_VectorNPCs.push_back(new NPC(Point2f{ float(rand() % 3001), float(rand() % 2001) }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
+	}
 
 	m_Timer = 30.0;
 	m_DeathTimer = 5.0f;
@@ -91,6 +90,16 @@ void Game::Update( float elapsedSec )
 	}
 
 
+	if (m_ptrPlayer->GetPosition().x < 0.0f or m_ptrPlayer->GetPosition().x > 3000.0f)
+	{
+		m_ptrPlayer->Die();
+	}
+
+	if (m_ptrPlayer->GetPosition().y < 0.0f or m_ptrPlayer->GetPosition().y > 2000.0f)
+	{
+		m_ptrPlayer->Die();
+	}
+
 	for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
 	{
 		m_VectorNPCs[index]->Draw();
@@ -111,7 +120,7 @@ void Game::Draw( ) const
 {
 	ClearBackground( );
 
-	m_ptrCamera->Aim(4000.0f, 3000.0f, m_ptrPlayer->GetPosition());
+	m_ptrCamera->Aim(3000.0f, 2000.0f, m_ptrPlayer->GetPosition());
 
 	for (int index{}; index < 8; ++index)
 	{
@@ -130,9 +139,63 @@ void Game::Draw( ) const
 	{
 		m_VectorNPCs[index]->Draw();
 	}
+	// The offset on the boarders is not tied to the half of the screen anymore!
+	if (m_ptrPlayer->IsAlive())
+	{
+		SetColor(Color4f{ 1.0f, 0.0f, 0.0f, 1.0f });
 
-	utils::DrawLine(Point2f{ m_ptrPlayer->GetPosition().x + 17.5f, m_ptrPlayer->GetPosition().y + 17.5f}, Point2f{(m_MousePointer.x + m_ptrPlayer->GetPosition().x - 850.0f * 0.5f), (m_MousePointer.y + m_ptrPlayer->GetPosition().y - 500.0f * 0.5f)});
+		Point2f playerPos = m_ptrPlayer->GetPosition();
+		Point2f start{ playerPos.x + 17.5f, playerPos.y + 17.5f };
+		Point2f end;
 
+		if (playerPos.x > 425.0f && playerPos.x < 2575.0f) 
+		{
+			if (playerPos.y > 250.0f && playerPos.y < 1750.0f) 
+			{
+				end = Point2f{ m_MousePointer.x + playerPos.x - 850.0f * 0.5f, m_MousePointer.y + playerPos.y - 500.0f * 0.5f };
+			}
+			else if (playerPos.y < 250.0f) 
+			{
+				end = Point2f{ m_MousePointer.x + playerPos.x - 850.0f * 0.5f, m_MousePointer.y };
+			}
+			else if (playerPos.y > 1750.0f) 
+			{
+				end = Point2f{ m_MousePointer.x + playerPos.x - 850.0f * 0.5f, m_MousePointer.y + (2000.0f - 500.0f) };
+			}
+		}
+		else if (playerPos.x < 425.0f) 
+		{
+			if (playerPos.y > 250.0f && playerPos.y < 1750.0f) 
+			{
+				end = Point2f{ m_MousePointer.x, m_MousePointer.y + playerPos.y - 500.0f * 0.5f };
+			}
+			else if (playerPos.y < 250.0f) 
+			{
+				end = Point2f{ m_MousePointer.x, m_MousePointer.y };
+			}
+			else if (playerPos.y > 1750.0f) 
+			{
+				end = Point2f{ m_MousePointer.x, m_MousePointer.y + (2000.0f - 500.0f) };
+			}
+		}
+		else if (playerPos.x > 2575.0f)
+		{
+			if (playerPos.y > 250.0f && playerPos.y < 1750.0f)
+			{
+				end = Point2f{ m_MousePointer.x + (3000.0f - 850.0f), m_MousePointer.y + playerPos.y - 500.0f * 0.5f };
+			}
+			else if (playerPos.y < 250.0f)
+			{
+				end = Point2f{ m_MousePointer.x + (3000.0f - 850.0f), m_MousePointer.y };
+			}
+			else if (playerPos.y > 1750.0f)
+			{
+				end = Point2f{ m_MousePointer.x + (3000.0f - 850.0f), m_MousePointer.y + (2000.0f - 500.0f) };
+			}
+		}
+
+		utils::DrawLine(start, end);
+	}
 	m_ptrCamera->Reset();
 
 }
@@ -151,14 +214,46 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 		m_Timer = 30.0;
 		m_DeathTimer = 5.0f;
 
+		m_NumberOfCivs = 0;
+
 		for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
 		{
 			m_VectorNPCs[index]->SetAlive();
+			m_VectorNPCs[index]->SetPos(Point2f{ float(rand() % 3001), float(rand() % 2001) });
 		}
 
 		m_ptrPlayer->SetAlive();
 
-		m_ptrPlayer->SetPos(Point2f{ 2000.0f, 1500.0f });
+		m_ptrPlayer->SetPos(Point2f{ 1500.0f, 1000.0f });
+
+		m_ptrPlayer->SetCounter(0);
+
+		for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+		{
+			m_VectorNPCs[index]->SetHostility(true);
+		}
+
+		for (int index{}; index < m_VectorNPCs.size(); ++index)
+		{
+			if (m_NumberOfCivs < 2)
+			{
+				int indexToChange{ rand() % 5 };
+
+				if (m_VectorNPCs[indexToChange]->IsEnemy())
+				{
+					m_NumberOfCivs++;
+					m_VectorNPCs[indexToChange]->SetHostility(false);
+				}
+				else
+				{
+					index -= 1;
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
 
 		break;
 	}

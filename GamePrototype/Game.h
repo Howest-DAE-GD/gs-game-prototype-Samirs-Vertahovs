@@ -25,6 +25,9 @@ public:
 	void ProcessMouseDownEvent( const SDL_MouseButtonEvent& e ) override;
 	void ProcessMouseUpEvent( const SDL_MouseButtonEvent& e ) override;
 
+	float GenerateX();
+	float GenerateY();
+
 	enum class GameState {
 		level1play,
 		level2play,
@@ -52,7 +55,24 @@ private:
 
 	Rectf m_MapBounds{ 0.0f, 0.0f, 3000.0f, 2000.0f };
 
-	//Texture m_StringTexture;
+	Texture* m_StringTexture;
+	Texture* m_StringTexture2;
+	Texture* m_StringTexture3;
+	Texture* m_StringTexture4;
+	std::string m_StringTimer;
+	std::string m_StringDeathTimer;
+	
+	Texture* m_One;
+	Texture* m_Two;
+	Texture* m_Three;
+	Texture* m_Four;
+	Texture* m_Five;
+	Texture* m_Six;
+	Texture* m_Seven;
+	Texture* m_Eight;
+	Texture* m_Nine;
+	Texture* m_Zero;
+	Texture* m_Point;
 
 	// FUNCTIONS
 	void Initialize();

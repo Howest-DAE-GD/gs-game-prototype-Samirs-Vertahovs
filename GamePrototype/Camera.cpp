@@ -3,7 +3,8 @@
 
 Camera::Camera(float screenWidth, float screenHeight) :
 	m_ScreenWidth{ screenWidth },
-	m_ScreenHeight{ screenHeight }
+	m_ScreenHeight{ screenHeight },
+	m_TrackPos{}
 {
 
 }
@@ -35,6 +36,9 @@ void Camera::Aim(float levelW, float levelH, const Point2f& trackCenter)
 		NewCameraPos.y = levelH - m_ScreenHeight;
 	}
 
+	m_TrackPos.x = NewCameraPos.x;
+	m_TrackPos.y = NewCameraPos.y;
+
 	glPushMatrix();
 	{
 		glTranslatef(-NewCameraPos.x, -NewCameraPos.y, 0.0f);
@@ -45,4 +49,9 @@ void Camera::Aim(float levelW, float levelH, const Point2f& trackCenter)
 void Camera::Reset()
 {
 	glPopMatrix();
+}
+
+Point2f Camera::GetTrackPos() const
+{
+	return m_TrackPos;
 }

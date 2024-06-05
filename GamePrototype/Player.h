@@ -11,7 +11,7 @@ public:
 	Player(const Point2f& pos, float width, float height, const Rectf& fieldboundaries);
 	~Player();
 
-	void Update(float elapsedSec, std::vector<NPC*>& enemies, const Uint8* pStates);
+	void Update(float elapsedSec, std::vector<NPC*>& enemies, const Uint8* pStates, int& killedEnemies, int& killedCivs);
 	void Draw() const;
 	void Shoot(const Point2f& direction);
 	bool DoHitTest(const Rectf& bullet);

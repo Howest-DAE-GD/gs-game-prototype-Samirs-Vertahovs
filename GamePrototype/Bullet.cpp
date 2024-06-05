@@ -32,14 +32,14 @@ Bullet::~Bullet()
 
 }
 
-void Bullet::Update(float elapsedSec, std::vector<NPC*>& npcs, int& counter)
+void Bullet::Update(float elapsedSec, std::vector<NPC*>& npcs, int& killedEnemies, int& killedCivs)
 {
 	if (m_IsActivated)
 	{
 		m_Position.x += m_Velocity.x * elapsedSec;
 		m_Position.y += m_Velocity.y * elapsedSec;
 
-		CheckHit(npcs, counter);
+		CheckHit(npcs, killedEnemies, killedCivs);
 
 		CheckBoundaries();
 
@@ -107,7 +107,7 @@ void Bullet::CheckBoundaries()
 
 }
 
-void Bullet::CheckHit(std::vector<NPC*>& npcs, int& counter)
+void Bullet::CheckHit(std::vector<NPC*>& npcs, int& killedEnemies, int& killedCivs)
 {
 	for (NPC* npc : npcs)
 	{
@@ -115,11 +115,11 @@ void Bullet::CheckHit(std::vector<NPC*>& npcs, int& counter)
 		{
 			if (npc->IsEnemy())
 			{
-				counter += 1;
+				killedEnemies += 1;
 			}
 			else
 			{
-				counter -= 1;
+				killedCivs += 1;
 			}
 			m_IsActivated = false;
 		}

@@ -24,38 +24,38 @@ Player::~Player()
 	delete m_PtrBullet;
 }
 
-void Player::Update(float elapsedSec, std::vector<NPC*>& npcs, const Uint8* pStates)
+void Player::Update(float elapsedSec, std::vector<NPC*>& npcs, const Uint8* pStates, int& killedEnemies, int& killedCivs)
 {
 	bool check = false;
 
-	m_PtrBullet->Update(elapsedSec, npcs, m_Counter);
+	m_PtrBullet->Update(elapsedSec, npcs, killedEnemies, killedCivs);
 
 	if (m_Alive)
 	{
 		if (pStates[SDL_SCANCODE_W])
 		{
-			m_Velocity.y = 350.0f;
+			m_Velocity.y = 450.0f;
 			m_Position.y += m_Velocity.y * elapsedSec;
 			m_Bounds.bottom = m_Position.y;
 			check = true;
 		}
 		if (pStates[SDL_SCANCODE_S])
 		{
-			m_Velocity.y = -350.0f;
+			m_Velocity.y = -450.0f;
 			m_Position.y += m_Velocity.y * elapsedSec;
 			m_Bounds.bottom = m_Position.y;
 			check = true;
 		}
 		if (pStates[SDL_SCANCODE_D])
 		{
-			m_Velocity.x = 350.0f;
+			m_Velocity.x = 450.0f;
 			m_Position.x += m_Velocity.x * elapsedSec;
 			m_Bounds.left = m_Position.x;
 			check = true;
 		}
 		if (pStates[SDL_SCANCODE_A])
 		{
-			m_Velocity.x = -350.0f;
+			m_Velocity.x = -450.0f;
 			m_Position.x += m_Velocity.x * elapsedSec;
 			m_Bounds.left = m_Position.x;
 			check = true;

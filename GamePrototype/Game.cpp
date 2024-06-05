@@ -43,33 +43,42 @@ void Game::Initialize( )
 	m_ptrCamera = new Camera(850.0f, 500.0f);
 	m_ptrPlayer = new Player(Point2f{ 2000.0f, 1500.0f }, 35.0f, 35.0f, Rectf{ 0.0f, 0.0f, 3000.0f, 2000.0f });
 	m_ptrMap = new Texture("Map.png");
-	m_StringTexture = new Texture("Kill or be Killed:", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_StringTexture2 = new Texture("Do not stop:", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_StringTexture3 = new Texture("Better luck next time.", "Montserrat-Light.ttf", 65.0f, Color4f{ 0.7f, 0.0f, 0.0f, 1.0f });
-	m_StringTexture4 = new Texture("Press R to restart.", "Montserrat-Light.ttf", 45.0f, Color4f{ 0.3f, 0.0f, 0.0f, 1.0f });
+	m_StringTexture = new Texture("Kill or be Killed:", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_StringTexture2 = new Texture("Do not stop:", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_StringTexture3 = new Texture("Better luck next time.", "Montserrat-Light.ttf", 65, Color4f{ 0.7f, 0.0f, 0.0f, 1.0f });
+	m_StringTexture4 = new Texture("Press R to restart.", "Montserrat-Light.ttf", 45, Color4f{ 0.3f, 0.0f, 0.0f, 1.0f });
+	m_StringTexture5 = new Texture("Next stage, then.", "Montserrat-Light.ttf", 45, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_StringTexture6 = new Texture("Final stage.", "Montserrat-Light.ttf", 45, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
 
-	m_One = new Texture("1", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_Two = new Texture("2", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_Three = new Texture("3", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_Four = new Texture("4", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_Five = new Texture("5", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_Six = new Texture("6", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_Seven = new Texture("7", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_Eight = new Texture("8", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_Nine = new Texture("9", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_Zero = new Texture("0", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_Point = new Texture(".", "Montserrat-Light.ttf", 40.0f, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_One = new Texture("1", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_Two = new Texture("2", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_Three = new Texture("3", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_Four = new Texture("4", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_Five = new Texture("5", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_Six = new Texture("6", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_Seven = new Texture("7", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_Eight = new Texture("8", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_Nine = new Texture("9", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_Zero = new Texture("0", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_Point = new Texture(".", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+
+	m_GameState = GameState::level1play;
 
 	m_NPCwidth = 30.0f;
 
 	m_NumberOfCivs = 0;
+
+	m_KilledEnemiesCurrentLvl = 0;
+	m_KilledCivsCurrentLvl = 0;
+	m_KilledEnemiesTotal = 0;
+	m_KilledCivsTotal = 0;
 
 	for (int index{}; index < 5; ++index)
 	{
 		m_VectorNPCs.push_back(new NPC(Point2f{ GenerateX(), GenerateY() }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
 	}
 
-	m_Timer = 30.0f;
+	m_Timer = 35.0f;
 	m_DeathTimer = 5.0f;
 
 	m_StringTimer = std::to_string(m_Timer);
@@ -90,6 +99,8 @@ void Game::Cleanup( )
 	delete m_StringTexture2;
 	delete m_StringTexture3;
 	delete m_StringTexture4;
+	delete m_StringTexture5;
+	delete m_StringTexture6;
 	delete m_One;
 	delete m_Two;
 	delete m_Three;
@@ -108,7 +119,7 @@ void Game::Update( float elapsedSec )
 	// Check keyboard state
 	const Uint8 *pStates = SDL_GetKeyboardState( nullptr );
 
-	m_ptrPlayer->Update(elapsedSec, m_VectorNPCs, pStates);
+	m_ptrPlayer->Update(elapsedSec, m_VectorNPCs, pStates, m_KilledEnemiesCurrentLvl, m_KilledCivsCurrentLvl);
 
 	if (m_Timer > 0)
 	{
@@ -119,6 +130,29 @@ void Game::Update( float elapsedSec )
 	{
 		m_DeathTimer -= elapsedSec;
 	}
+
+	if (pStates[SDL_SCANCODE_W] and pStates[SDL_SCANCODE_S] and !pStates[SDL_SCANCODE_A] and !pStates[SDL_SCANCODE_D])
+	{
+		m_DeathTimer -= elapsedSec;
+	}
+
+	if (pStates[SDL_SCANCODE_A] and pStates[SDL_SCANCODE_D] and !pStates[SDL_SCANCODE_W] and !pStates[SDL_SCANCODE_S])
+	{
+		m_DeathTimer -= elapsedSec;
+	}
+
+	if (pStates[SDL_SCANCODE_A] and pStates[SDL_SCANCODE_D] and pStates[SDL_SCANCODE_W] and pStates[SDL_SCANCODE_S])
+	{
+		m_DeathTimer -= elapsedSec;
+	}
+
+	/*if (pStates[SDL_SCANCODE_P])
+	{
+		m_GameState = GameState::level2play;
+		m_KilledEnemiesCurrentLvl = 5;
+		m_Timer = 2.0f;
+	}*/
+
 
 	if (m_DeathTimer <= 0)
 	{
@@ -172,11 +206,228 @@ void Game::Update( float elapsedSec )
 	m_StringDeathTimer = str;
 
 	m_StringTimer = std::to_string(int(m_Timer));
+
+
+	std::cout << m_KilledCivsCurrentLvl << std::endl;
+	std::cout << m_KilledEnemiesCurrentLvl << std::endl;
+	std::cout << m_KilledCivsTotal << std::endl;
+	std::cout << m_KilledEnemiesTotal << std::endl;
+
+	// Level switch
+
+	if (m_GameState == GameState::level1play and m_KilledEnemiesCurrentLvl == 3 and m_Timer < 1.25f)
+	{
+		m_GameState = GameState::level2play;
+		m_KilledCivsTotal += m_KilledCivsCurrentLvl;
+		m_KilledEnemiesTotal += m_KilledEnemiesCurrentLvl;
+
+		m_KilledCivsCurrentLvl = 0;
+		m_KilledEnemiesCurrentLvl = 0;
+
+		m_Timer = 35.0;
+		m_DeathTimer = 5.0f;
+
+		m_NumberOfCivs = 0;
+
+		m_ptrPlayer->SetAlive();
+
+		m_ptrPlayer->SetPos(Point2f{ 2000.0f, 1500.0f });
+
+		for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+		{
+			delete m_VectorNPCs[index];
+		}
+
+		m_VectorNPCs.clear();
+
+		if (m_KilledCivsTotal > 0)
+		{
+			for (int index{}; index < 8; ++index)
+			{
+				m_VectorNPCs.push_back(new NPC(Point2f{ GenerateX(), GenerateY() }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
+			}
+		}
+		else
+		{
+			for (int index{}; index < 7; ++index)
+			{
+				m_VectorNPCs.push_back(new NPC(Point2f{ GenerateX(), GenerateY() }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
+			}
+		}
+
+		for (int index{}; index < m_VectorNPCs.size(); ++index)
+		{
+			if (m_NumberOfCivs < 3)
+			{
+				int indexToChange{ int(rand() % m_VectorNPCs.size()) };
+
+				if (m_VectorNPCs[indexToChange]->IsEnemy())
+				{
+					m_NumberOfCivs++;
+					m_VectorNPCs[indexToChange]->SetHostility(false);
+				}
+				else
+				{
+					index -= 1;
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+
+	}
+
+	if (m_GameState == GameState::level2play and m_KilledEnemiesCurrentLvl == 5 and m_Timer < 1.5f)
+	{
+		m_GameState = GameState::level3play;
+		m_KilledCivsTotal += m_KilledCivsCurrentLvl;
+		m_KilledEnemiesTotal += m_KilledEnemiesCurrentLvl;
+
+		m_KilledCivsCurrentLvl = 0;
+		m_KilledEnemiesCurrentLvl = 0;
+
+		m_Timer = 45.0;
+		m_DeathTimer = 5.0f;
+
+		m_NumberOfCivs = 0;
+
+		m_ptrPlayer->SetAlive();
+
+		m_ptrPlayer->SetPos(Point2f{ 2000.0f, 1500.0f });
+
+		for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+		{
+			delete m_VectorNPCs[index];
+		}
+
+		m_VectorNPCs.clear();
+
+		if (m_KilledCivsTotal > 5)
+		{
+			for (int index{}; index < 13; ++index)
+			{
+				m_VectorNPCs.push_back(new NPC(Point2f{ GenerateX(), GenerateY() }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
+			}
+		}
+		else
+		{
+			for (int index{}; index < 10; ++index)
+			{
+				m_VectorNPCs.push_back(new NPC(Point2f{ GenerateX(), GenerateY() }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
+			}
+		}
+
+		for (int index{}; index < m_VectorNPCs.size(); ++index)
+		{
+			if (m_NumberOfCivs < 5)
+			{
+				int indexToChange{ int(rand() % m_VectorNPCs.size()) };
+
+				if (m_VectorNPCs[indexToChange]->IsEnemy())
+				{
+					m_NumberOfCivs++;
+					m_VectorNPCs[indexToChange]->SetHostility(false);
+				}
+				else
+				{
+					index -= 1;
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+	else if (m_GameState == GameState::level2play and m_KilledEnemiesCurrentLvl == 4 and m_KilledCivsTotal < 2 and m_Timer < 1.5f)
+	{
+		m_GameState = GameState::level3play;
+		m_KilledCivsTotal += m_KilledCivsCurrentLvl;
+		m_KilledEnemiesTotal += m_KilledEnemiesCurrentLvl;
+
+		m_KilledCivsCurrentLvl = 0;
+		m_KilledEnemiesCurrentLvl = 0;
+
+		m_Timer = 40.0;
+		m_DeathTimer = 5.0f;
+
+		m_NumberOfCivs = 0;
+
+		m_ptrPlayer->SetAlive();
+
+		m_ptrPlayer->SetPos(Point2f{ 2000.0f, 1500.0f });
+
+		for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+		{
+			delete m_VectorNPCs[index];
+		}
+
+		m_VectorNPCs.clear();
+
+		if (m_KilledCivsTotal > 4)
+		{
+			for (int index{}; index < 11; ++index)
+			{
+				m_VectorNPCs.push_back(new NPC(Point2f{ GenerateX(), GenerateY() }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
+			}
+		}
+		else
+		{
+			for (int index{}; index < 9; ++index)
+			{
+				m_VectorNPCs.push_back(new NPC(Point2f{ GenerateX(), GenerateY() }, m_NPCwidth, m_NPCwidth, true, m_MapBounds, m_ptrPlayer));
+			}
+		}
+		
+		for (int index{}; index < m_VectorNPCs.size(); ++index)	
+		{
+			if (m_NumberOfCivs < 4)
+			{
+				int indexToChange{ int(rand() % m_VectorNPCs.size()) };
+
+				if (m_VectorNPCs[indexToChange]->IsEnemy())
+				{
+					m_NumberOfCivs++;
+					m_VectorNPCs[indexToChange]->SetHostility(false);
+				}
+				else
+				{
+					index -= 1;
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+
+	if (m_GameState == GameState::level3play and m_KilledEnemiesCurrentLvl == 7 and m_KilledCivsTotal > 4 and m_Timer < 2.0f)
+	{
+		m_GameState = GameState::finale;
+		m_KilledCivsTotal += m_KilledCivsCurrentLvl;
+		m_KilledEnemiesTotal += m_KilledEnemiesCurrentLvl;
+
+		m_KilledCivsCurrentLvl = 0;
+		m_KilledEnemiesCurrentLvl = 0;
+	}
+	else if (m_GameState == GameState::level3play and m_KilledEnemiesCurrentLvl == 5 and m_Timer < 2.0f)
+	{
+		m_GameState = GameState::finale;
+		m_KilledCivsTotal += m_KilledCivsCurrentLvl;
+		m_KilledEnemiesTotal += m_KilledEnemiesCurrentLvl;
+
+		m_KilledCivsCurrentLvl = 0;
+		m_KilledEnemiesCurrentLvl = 0;
+	}
+
 }
 
-void Game::Draw( ) const
+void Game::Draw() const
 {
-	ClearBackground( );
+	ClearBackground();
 
 	m_ptrCamera->Aim(3000.0f, 2000.0f, m_ptrPlayer->GetPosition());
 
@@ -184,17 +435,17 @@ void Game::Draw( ) const
 	{
 		for (int index2{}; index2 < 6; ++index2)
 		{
-			m_ptrMap->Draw(Point2f{ 0.0f + m_ptrMap->GetWidth() * index, 0.0f + m_ptrMap->GetHeight() * index2});
+			m_ptrMap->Draw(Point2f{ 0.0f + m_ptrMap->GetWidth() * index, 0.0f + m_ptrMap->GetHeight() * index2 });
 		}
 	}
 
 	SetColor(Color4f{ 1.0f, 0.0f, 0.0f, 1.0f });
 	DrawRect(0.0f, 0.0f, 3000.0f, 2000.0f, 20.0f);
 
-	m_StringTexture->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 10.0f, m_ptrCamera->GetTrackPos().y + 440.0f});
+	m_StringTexture->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 10.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
 	m_StringTexture2->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 10.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
 
-	for (int i = 0; i < m_StringTimer.length(); ++i) 
+	for (int i = 0; i < m_StringTimer.length(); ++i)
 	{
 		switch (m_StringTimer[i]) {
 		case '1':
@@ -279,7 +530,7 @@ void Game::Draw( ) const
 		m_VectorNPCs[index]->Draw();
 	}
 	// The offset on the boarders is not tied to the half of the screen anymore!
-	if (m_ptrPlayer->IsAlive())
+	if (m_ptrPlayer->IsAlive() and m_GameState != GameState::finale)
 	{
 		SetColor(Color4f{ 1.0f, 0.0f, 0.0f, 1.0f });
 
@@ -287,32 +538,32 @@ void Game::Draw( ) const
 		Point2f start{ playerPos.x + 17.5f, playerPos.y + 17.5f };
 		Point2f end;
 
-		if (playerPos.x > 425.0f && playerPos.x < 2575.0f) 
+		if (playerPos.x > 425.0f && playerPos.x < 2575.0f)
 		{
-			if (playerPos.y > 250.0f && playerPos.y < 1750.0f) 
+			if (playerPos.y > 250.0f && playerPos.y < 1750.0f)
 			{
 				end = Point2f{ m_MousePointer.x + playerPos.x - 850.0f * 0.5f, m_MousePointer.y + playerPos.y - 500.0f * 0.5f };
 			}
-			else if (playerPos.y < 250.0f) 
+			else if (playerPos.y < 250.0f)
 			{
 				end = Point2f{ m_MousePointer.x + playerPos.x - 850.0f * 0.5f, m_MousePointer.y };
 			}
-			else if (playerPos.y > 1750.0f) 
+			else if (playerPos.y > 1750.0f)
 			{
 				end = Point2f{ m_MousePointer.x + playerPos.x - 850.0f * 0.5f, m_MousePointer.y + (2000.0f - 500.0f) };
 			}
 		}
-		else if (playerPos.x < 425.0f) 
+		else if (playerPos.x < 425.0f)
 		{
-			if (playerPos.y > 250.0f && playerPos.y < 1750.0f) 
+			if (playerPos.y > 250.0f && playerPos.y < 1750.0f)
 			{
 				end = Point2f{ m_MousePointer.x, m_MousePointer.y + playerPos.y - 500.0f * 0.5f };
 			}
-			else if (playerPos.y < 250.0f) 
+			else if (playerPos.y < 250.0f)
 			{
 				end = Point2f{ m_MousePointer.x, m_MousePointer.y };
 			}
-			else if (playerPos.y > 1750.0f) 
+			else if (playerPos.y > 1750.0f)
 			{
 				end = Point2f{ m_MousePointer.x, m_MousePointer.y + (2000.0f - 500.0f) };
 			}
@@ -336,10 +587,20 @@ void Game::Draw( ) const
 		utils::DrawLine(start, end);
 	}
 
-	if (!m_ptrPlayer->IsAlive())
+	if (!m_ptrPlayer->IsAlive() and m_GameState != GameState::finale)
 	{
 		m_StringTexture3->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 95.0f, m_ptrCamera->GetTrackPos().y + 250.0f });
 		m_StringTexture4->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 240.0f, m_ptrCamera->GetTrackPos().y + 200.0f });
+	}
+
+	if (m_GameState == GameState::level2play and m_Timer > 35.0f)
+	{
+		m_StringTexture5->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 240.0f, m_ptrCamera->GetTrackPos().y + 200.0f });
+	}
+
+	if (m_GameState == GameState::level3play and m_Timer > 40.0f)
+	{
+		m_StringTexture6->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 250.0f, m_ptrCamera->GetTrackPos().y + 200.0f });
 	}
 
 	m_ptrCamera->Reset();
@@ -356,48 +617,151 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 	switch (e.keysym.sym)
 	{
 	case SDLK_r:
-
-		m_Timer = 30.0;
-		m_DeathTimer = 5.0f;
-
-		m_NumberOfCivs = 0;
-
-		for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+		
+		if (m_GameState == GameState::level1play)
 		{
-			m_VectorNPCs[index]->SetAlive();
-			m_VectorNPCs[index]->SetPos(Point2f{ GenerateX(), GenerateY() });
-		}
+			m_Timer = 35.0;
+			m_DeathTimer = 5.0f;
 
-		m_ptrPlayer->SetAlive();
+			m_NumberOfCivs = 0;
 
-		m_ptrPlayer->SetPos(Point2f{ 2000.0f, 1500.0f });
+			m_KilledEnemiesTotal = 0;
+			m_KilledCivsTotal = 0;
+			m_KilledEnemiesCurrentLvl = 0;
+			m_KilledCivsCurrentLvl = 0;
 
-		m_ptrPlayer->SetCounter(0);
-
-		for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
-		{
-			m_VectorNPCs[index]->SetHostility(true);
-		}
-
-		for (int index{}; index < m_VectorNPCs.size(); ++index)
-		{
-			if (m_NumberOfCivs < 2)
+			for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
 			{
-				int indexToChange{ rand() % 5 };
+				m_VectorNPCs[index]->SetAlive();
+				m_VectorNPCs[index]->SetPos(Point2f{ GenerateX(), GenerateY() });
+			}
 
-				if (m_VectorNPCs[indexToChange]->IsEnemy())
+			m_ptrPlayer->SetAlive();
+
+			m_ptrPlayer->SetPos(Point2f{ 2000.0f, 1500.0f });
+
+			for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+			{
+				m_VectorNPCs[index]->SetHostility(true);
+			}
+
+			for (int index{}; index < m_VectorNPCs.size(); ++index)
+			{
+				if (m_NumberOfCivs < 2)
 				{
-					m_NumberOfCivs++;
-					m_VectorNPCs[indexToChange]->SetHostility(false);
+					int indexToChange{ int(rand() % m_VectorNPCs.size()) };
+
+					if (m_VectorNPCs[indexToChange]->IsEnemy())
+					{
+						m_NumberOfCivs++;
+						m_VectorNPCs[indexToChange]->SetHostility(false);
+					}
+					else
+					{
+						index -= 1;
+					}
 				}
 				else
 				{
-					index -= 1;
+					break;
 				}
 			}
-			else
+		} 
+		else if (m_GameState == GameState::level2play)
+		{
+			m_Timer = 40.0;
+			m_DeathTimer = 5.0f;
+
+			m_NumberOfCivs = 0;
+
+			m_KilledCivsCurrentLvl = 0;
+			m_KilledEnemiesCurrentLvl = 0;
+
+			for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
 			{
-				break;
+				m_VectorNPCs[index]->SetAlive();
+				m_VectorNPCs[index]->SetPos(Point2f{ GenerateX(), GenerateY() });
+			}
+
+			m_ptrPlayer->SetAlive();
+
+			m_ptrPlayer->SetPos(Point2f{ 2000.0f, 1500.0f });
+
+
+			for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+			{
+				m_VectorNPCs[index]->SetHostility(true);
+			}
+
+			
+			for (int index{}; index < m_VectorNPCs.size(); ++index)
+			{
+				if (m_NumberOfCivs < 3)
+				{
+					int indexToChange{ int(rand() % m_VectorNPCs.size()) };
+
+					if (m_VectorNPCs[indexToChange]->IsEnemy())
+					{
+						m_NumberOfCivs++;
+						m_VectorNPCs[indexToChange]->SetHostility(false);
+					}
+					else
+					{
+						index -= 1;
+					}
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+		else if (m_GameState == GameState::level3play)
+		{
+			m_Timer = 45.0;
+			m_DeathTimer = 5.0f;
+
+			m_NumberOfCivs = 0;
+
+			m_KilledCivsCurrentLvl = 0;
+			m_KilledEnemiesCurrentLvl = 0;
+
+			for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+			{
+				m_VectorNPCs[index]->SetAlive();
+				m_VectorNPCs[index]->SetPos(Point2f{ GenerateX(), GenerateY() });
+			}
+
+			m_ptrPlayer->SetAlive();
+
+			m_ptrPlayer->SetPos(Point2f{ 2000.0f, 1500.0f });
+
+
+			for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
+			{
+				m_VectorNPCs[index]->SetHostility(true);
+			}
+
+			for (int index{}; index < m_VectorNPCs.size(); ++index)
+			{
+				if (m_NumberOfCivs < 5)
+				{
+					int indexToChange{ int(rand() % m_VectorNPCs.size()) };
+
+					if (m_VectorNPCs[indexToChange]->IsEnemy())
+					{
+						m_NumberOfCivs++;
+						m_VectorNPCs[indexToChange]->SetHostility(false);
+					}
+					else
+					{
+						index -= 1;
+					}
+				}
+				else
+				{
+					break;
+				}
 			}
 		}
 

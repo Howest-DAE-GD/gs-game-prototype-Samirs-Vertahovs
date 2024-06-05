@@ -32,7 +32,7 @@ public:
 		level1play,
 		level2play,
 		level3play,
-		pause
+		finale
 	};
 
 private:
@@ -42,6 +42,8 @@ private:
 	std::vector<NPC*> m_VectorNPCs;
 	Texture* m_ptrMap;
 
+	GameState m_GameState;
+
 	double m_Timer;
 	float m_DeathTimer;
 	Point2f m_MousePointer;
@@ -49,7 +51,14 @@ private:
 	int m_NumberOfEnemies;
 	int m_NumberOfCivs;
 
-	int m_EntityCount;
+	int m_EntityCount1;
+	int m_EntityCount2;
+	int m_EntityCount3;
+
+	int m_KilledEnemiesCurrentLvl;
+	int m_KilledCivsCurrentLvl;
+	int m_KilledEnemiesTotal;
+	int m_KilledCivsTotal;
 
 	float m_NPCwidth;
 
@@ -59,6 +68,8 @@ private:
 	Texture* m_StringTexture2;
 	Texture* m_StringTexture3;
 	Texture* m_StringTexture4;
+	Texture* m_StringTexture5;
+	Texture* m_StringTexture6;
 	std::string m_StringTimer;
 	std::string m_StringDeathTimer;
 	

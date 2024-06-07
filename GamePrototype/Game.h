@@ -32,7 +32,8 @@ public:
 		level1play,
 		level2play,
 		level3play,
-		finale
+		finale,
+		finalespecial
 	};
 
 private:
@@ -51,9 +52,7 @@ private:
 	int m_NumberOfEnemies;
 	int m_NumberOfCivs;
 
-	int m_EntityCount1;
-	int m_EntityCount2;
-	int m_EntityCount3;
+	int m_SpecialEndingCount;
 
 	int m_KilledEnemiesCurrentLvl;
 	int m_KilledCivsCurrentLvl;
@@ -70,6 +69,10 @@ private:
 	Texture* m_StringTexture4;
 	Texture* m_StringTexture5;
 	Texture* m_StringTexture6;
+	Texture* m_StringTexture7;
+	Texture* m_StringTexture8;
+	Texture* m_StringTexture9;
+
 	std::string m_StringTimer;
 	std::string m_StringDeathTimer;
 	

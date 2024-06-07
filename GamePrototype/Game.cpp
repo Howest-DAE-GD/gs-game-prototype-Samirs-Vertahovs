@@ -45,10 +45,13 @@ void Game::Initialize( )
 	m_ptrMap = new Texture("Map.png");
 	m_StringTexture = new Texture("Kill or be Killed:", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
 	m_StringTexture2 = new Texture("Do not stop:", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
-	m_StringTexture3 = new Texture("Better luck next time.", "Montserrat-Light.ttf", 65, Color4f{ 0.7f, 0.0f, 0.0f, 1.0f });
-	m_StringTexture4 = new Texture("Press R to restart.", "Montserrat-Light.ttf", 45, Color4f{ 0.3f, 0.0f, 0.0f, 1.0f });
-	m_StringTexture5 = new Texture("Next stage, then.", "Montserrat-Light.ttf", 45, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_StringTexture3 = new Texture("You are not done here yet.", "Montserrat-Light.ttf", 55, Color4f{ 0.7f, 0.0f, 0.0f, 1.0f });
+	m_StringTexture4 = new Texture("Press R to ressurect.", "Montserrat-Light.ttf", 45, Color4f{ 0.3f, 0.0f, 0.0f, 1.0f });
+	m_StringTexture5 = new Texture("Second stage, then.", "Montserrat-Light.ttf", 45, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
 	m_StringTexture6 = new Texture("Final stage.", "Montserrat-Light.ttf", 45, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_StringTexture7 = new Texture("Fight. Or stay here forever.", "Montserrat-Light.ttf", 45, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
+	m_StringTexture8 = nullptr;
+	m_StringTexture9 = new Texture("Decent human being, eh? You may leave.", "Montserrat-Light.ttf", 37, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
 
 	m_One = new Texture("1", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
 	m_Two = new Texture("2", "Montserrat-Light.ttf", 40, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
@@ -72,6 +75,8 @@ void Game::Initialize( )
 	m_KilledCivsCurrentLvl = 0;
 	m_KilledEnemiesTotal = 0;
 	m_KilledCivsTotal = 0;
+
+	m_SpecialEndingCount = 0;
 
 	for (int index{}; index < 5; ++index)
 	{
@@ -101,6 +106,9 @@ void Game::Cleanup( )
 	delete m_StringTexture4;
 	delete m_StringTexture5;
 	delete m_StringTexture6;
+	delete m_StringTexture7;
+	delete m_StringTexture8;
+	delete m_StringTexture9;
 	delete m_One;
 	delete m_Two;
 	delete m_Three;
@@ -120,6 +128,20 @@ void Game::Update( float elapsedSec )
 	const Uint8 *pStates = SDL_GetKeyboardState( nullptr );
 
 	m_ptrPlayer->Update(elapsedSec, m_VectorNPCs, pStates, m_KilledEnemiesCurrentLvl, m_KilledCivsCurrentLvl);
+
+	// Special ending control
+
+	if (m_KilledCivsCurrentLvl != 0 or m_KilledEnemiesCurrentLvl != 0)
+	{
+		m_SpecialEndingCount = 0;
+	}
+
+	if (m_SpecialEndingCount == 4 and m_ptrPlayer->IsAlive())
+	{
+		m_GameState = GameState::finalespecial;
+	}
+
+	// Timers
 
 	if (m_Timer > 0)
 	{
@@ -146,20 +168,20 @@ void Game::Update( float elapsedSec )
 		m_DeathTimer -= elapsedSec;
 	}
 
-	/*if (pStates[SDL_SCANCODE_P])
-	{
-		m_GameState = GameState::level2play;
-		m_KilledEnemiesCurrentLvl = 5;
-		m_Timer = 2.0f;
-	}*/
+	//if (pStates[SDL_SCANCODE_P])
+	//{
+	//	m_GameState = GameState::level3play;
+	//	//m_KilledEnemiesCurrentLvl = 4;
+	//	m_Timer = 50.0f;
+	//}
 
 
-	if (m_DeathTimer <= 0)
+	if (m_DeathTimer <= 0 and m_GameState != GameState::finale and m_GameState != GameState::finalespecial)
 	{
 		m_ptrPlayer->Die();
 	}
 
-	if (m_Timer <= 0)
+	if (m_Timer <= 0 and m_GameState != GameState::finale and m_GameState != GameState::finalespecial)
 	{
 		m_ptrPlayer->Die();
 	}
@@ -170,13 +192,14 @@ void Game::Update( float elapsedSec )
 		m_DeathTimer = 0;
 	}
 
+	// Borders
 
-	if (m_ptrPlayer->GetPosition().x < 0.0f or m_ptrPlayer->GetPosition().x > 3000.0f)
+	if (m_ptrPlayer->GetPosition().x < -50.0f or m_ptrPlayer->GetPosition().x > 3000.0f)
 	{
 		m_ptrPlayer->Die();
 	}
 
-	if (m_ptrPlayer->GetPosition().y < 0.0f or m_ptrPlayer->GetPosition().y > 2000.0f)
+	if (m_ptrPlayer->GetPosition().y < -50.0f or m_ptrPlayer->GetPosition().y > 2000.0f)
 	{
 		m_ptrPlayer->Die();
 	}
@@ -207,11 +230,10 @@ void Game::Update( float elapsedSec )
 
 	m_StringTimer = std::to_string(int(m_Timer));
 
-
-	std::cout << m_KilledCivsCurrentLvl << std::endl;
+	/*std::cout << m_KilledCivsCurrentLvl << std::endl;
 	std::cout << m_KilledEnemiesCurrentLvl << std::endl;
 	std::cout << m_KilledCivsTotal << std::endl;
-	std::cout << m_KilledEnemiesTotal << std::endl;
+	std::cout << m_KilledEnemiesTotal << std::endl;*/
 
 	// Level switch
 
@@ -224,7 +246,7 @@ void Game::Update( float elapsedSec )
 		m_KilledCivsCurrentLvl = 0;
 		m_KilledEnemiesCurrentLvl = 0;
 
-		m_Timer = 35.0;
+		m_Timer = 40.0f;
 		m_DeathTimer = 5.0f;
 
 		m_NumberOfCivs = 0;
@@ -288,7 +310,7 @@ void Game::Update( float elapsedSec )
 		m_KilledCivsCurrentLvl = 0;
 		m_KilledEnemiesCurrentLvl = 0;
 
-		m_Timer = 45.0;
+		m_Timer = 50.0f;
 		m_DeathTimer = 5.0f;
 
 		m_NumberOfCivs = 0;
@@ -304,7 +326,7 @@ void Game::Update( float elapsedSec )
 
 		m_VectorNPCs.clear();
 
-		if (m_KilledCivsTotal > 5)
+		if (m_KilledCivsTotal >= 5)
 		{
 			for (int index{}; index < 13; ++index)
 			{
@@ -350,7 +372,7 @@ void Game::Update( float elapsedSec )
 		m_KilledCivsCurrentLvl = 0;
 		m_KilledEnemiesCurrentLvl = 0;
 
-		m_Timer = 40.0;
+		m_Timer = 50.0f;
 		m_DeathTimer = 5.0f;
 
 		m_NumberOfCivs = 0;
@@ -412,6 +434,8 @@ void Game::Update( float elapsedSec )
 
 		m_KilledCivsCurrentLvl = 0;
 		m_KilledEnemiesCurrentLvl = 0;
+
+		m_StringTexture8 = new Texture("Your freedom costed you " + std::to_string(m_KilledCivsTotal) + " civilians and " + std::to_string(m_KilledEnemiesTotal) + " other players.", "Montserrat-Light.ttf", 30, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
 	}
 	else if (m_GameState == GameState::level3play and m_KilledEnemiesCurrentLvl == 5 and m_Timer < 2.0f)
 	{
@@ -421,8 +445,25 @@ void Game::Update( float elapsedSec )
 
 		m_KilledCivsCurrentLvl = 0;
 		m_KilledEnemiesCurrentLvl = 0;
+
+		m_StringTexture8 = new Texture("Your freedom costed you " + std::to_string(m_KilledCivsTotal) + " civilians and " + std::to_string(m_KilledEnemiesTotal) + " other players.", "Montserrat-Light.ttf", 30, Color4f{ 0.0f, 0.0f, 0.0f, 1.0f });
 	}
 
+	if (m_GameState == GameState::finale)
+	{
+		for (int index{}; index < m_VectorNPCs.size(); ++index)
+		{
+			m_VectorNPCs[index]->SetAlive(false);
+		}
+	}
+
+	if (m_GameState == GameState::finalespecial)
+	{
+		for (int index{}; index < m_VectorNPCs.size(); ++index)
+		{
+			m_VectorNPCs[index]->SetAlive(false);
+		}
+	}
 }
 
 void Game::Draw() const
@@ -441,85 +482,88 @@ void Game::Draw() const
 
 	SetColor(Color4f{ 1.0f, 0.0f, 0.0f, 1.0f });
 	DrawRect(0.0f, 0.0f, 3000.0f, 2000.0f, 20.0f);
-
-	m_StringTexture->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 10.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
-	m_StringTexture2->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 10.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
-
-	for (int i = 0; i < m_StringTimer.length(); ++i)
+	
+	if (m_GameState != GameState::finale and m_GameState != GameState::finalespecial)
 	{
-		switch (m_StringTimer[i]) {
-		case '1':
-			m_One->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
-			break;
-		case '2':
-			m_Two->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
-			break;
-		case '3':
-			m_Three->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
-			break;
-		case '4':
-			m_Four->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
-			break;
-		case '5':
-			m_Five->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
-			break;
-		case '6':
-			m_Six->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
-			break;
-		case '7':
-			m_Seven->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
-			break;
-		case '8':
-			m_Eight->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
-			break;
-		case '9':
-			m_Nine->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
-			break;
-		case '0':
-			m_Zero->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
-			break;
-		case '.':
-			m_Point->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
-			break;
+		m_StringTexture->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 10.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
+		m_StringTexture2->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 10.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
+
+		for (int i = 0; i < m_StringTimer.length(); ++i)
+		{
+			switch (m_StringTimer[i]) {
+			case '1':
+				m_One->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
+				break;
+			case '2':
+				m_Two->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
+				break;
+			case '3':
+				m_Three->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
+				break;
+			case '4':
+				m_Four->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
+				break;
+			case '5':
+				m_Five->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
+				break;
+			case '6':
+				m_Six->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
+				break;
+			case '7':
+				m_Seven->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
+				break;
+			case '8':
+				m_Eight->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
+				break;
+			case '9':
+				m_Nine->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
+				break;
+			case '0':
+				m_Zero->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
+				break;
+			case '.':
+				m_Point->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 320.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 440.0f });
+				break;
+			}
 		}
-	}
 
-	for (int i = 0; i < m_StringDeathTimer.length(); ++i)
-	{
-		switch (m_StringDeathTimer[i]) {
-		case '1':
-			m_One->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
-			break;
-		case '2':
-			m_Two->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
-			break;
-		case '3':
-			m_Three->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
-			break;
-		case '4':
-			m_Four->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
-			break;
-		case '5':
-			m_Five->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
-			break;
-		case '6':
-			m_Six->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
-			break;
-		case '7':
-			m_Seven->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
-			break;
-		case '8':
-			m_Eight->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
-			break;
-		case '9':
-			m_Nine->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
-			break;
-		case '0':
-			m_Zero->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
-			break;
-		case '.':
-			m_Point->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
-			break;
+		for (int i = 0; i < m_StringDeathTimer.length(); ++i)
+		{
+			switch (m_StringDeathTimer[i]) {
+			case '1':
+				m_One->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
+				break;
+			case '2':
+				m_Two->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
+				break;
+			case '3':
+				m_Three->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
+				break;
+			case '4':
+				m_Four->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
+				break;
+			case '5':
+				m_Five->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
+				break;
+			case '6':
+				m_Six->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
+				break;
+			case '7':
+				m_Seven->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
+				break;
+			case '8':
+				m_Eight->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
+				break;
+			case '9':
+				m_Nine->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
+				break;
+			case '0':
+				m_Zero->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
+				break;
+			case '.':
+				m_Point->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 270.0f + i * 30.0f, m_ptrCamera->GetTrackPos().y + 400.0f });
+				break;
+			}
 		}
 	}
 
@@ -529,8 +573,8 @@ void Game::Draw() const
 	{
 		m_VectorNPCs[index]->Draw();
 	}
-	// The offset on the boarders is not tied to the half of the screen anymore!
-	if (m_ptrPlayer->IsAlive() and m_GameState != GameState::finale)
+
+	if (m_ptrPlayer->IsAlive() and m_GameState != GameState::finale and m_GameState != GameState::finalespecial)
 	{
 		SetColor(Color4f{ 1.0f, 0.0f, 0.0f, 1.0f });
 
@@ -585,9 +629,15 @@ void Game::Draw() const
 		}
 
 		utils::DrawLine(start, end);
+
+		if (m_GameState == GameState::level1play and m_Timer > 32.0f)
+		{
+			m_StringTexture7->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 160.0f, m_ptrCamera->GetTrackPos().y + 200.0f });
+		}
+
 	}
 
-	if (!m_ptrPlayer->IsAlive() and m_GameState != GameState::finale)
+	if (!m_ptrPlayer->IsAlive() and m_GameState != GameState::finale and m_GameState != GameState::finalespecial)
 	{
 		m_StringTexture3->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 95.0f, m_ptrCamera->GetTrackPos().y + 250.0f });
 		m_StringTexture4->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 240.0f, m_ptrCamera->GetTrackPos().y + 200.0f });
@@ -598,9 +648,19 @@ void Game::Draw() const
 		m_StringTexture5->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 240.0f, m_ptrCamera->GetTrackPos().y + 200.0f });
 	}
 
-	if (m_GameState == GameState::level3play and m_Timer > 40.0f)
+	if (m_GameState == GameState::level3play and m_Timer > 45.0f)
 	{
-		m_StringTexture6->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 250.0f, m_ptrCamera->GetTrackPos().y + 200.0f });
+		m_StringTexture6->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 300.0f, m_ptrCamera->GetTrackPos().y + 200.0f });
+	}
+
+	if (m_GameState == GameState::finale)
+	{
+		m_StringTexture8->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 15.0f, m_ptrCamera->GetTrackPos().y + 200.0f });
+	}
+
+	if (m_GameState == GameState::finalespecial)
+	{
+		m_StringTexture9->Draw(Point2f{ m_ptrCamera->GetTrackPos().x + 55.0f, m_ptrCamera->GetTrackPos().y + 200.0f });
 	}
 
 	m_ptrCamera->Reset();
@@ -620,7 +680,12 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 		
 		if (m_GameState == GameState::level1play)
 		{
-			m_Timer = 35.0;
+			if (m_KilledCivsCurrentLvl == 0 and m_KilledEnemiesCurrentLvl == 0 and !m_ptrPlayer->IsAlive())
+			{
+				m_SpecialEndingCount += 1;
+			}
+
+			m_Timer = 35.0f;
 			m_DeathTimer = 5.0f;
 
 			m_NumberOfCivs = 0;
@@ -632,7 +697,7 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 
 			for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
 			{
-				m_VectorNPCs[index]->SetAlive();
+				m_VectorNPCs[index]->SetAlive(true);
 				m_VectorNPCs[index]->SetPos(Point2f{ GenerateX(), GenerateY() });
 			}
 
@@ -669,7 +734,7 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 		} 
 		else if (m_GameState == GameState::level2play)
 		{
-			m_Timer = 40.0;
+			m_Timer = 40.0f;
 			m_DeathTimer = 5.0f;
 
 			m_NumberOfCivs = 0;
@@ -679,7 +744,7 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 
 			for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
 			{
-				m_VectorNPCs[index]->SetAlive();
+				m_VectorNPCs[index]->SetAlive(true);
 				m_VectorNPCs[index]->SetPos(Point2f{ GenerateX(), GenerateY() });
 			}
 
@@ -718,7 +783,7 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 		}
 		else if (m_GameState == GameState::level3play)
 		{
-			m_Timer = 45.0;
+			m_Timer = 50.0f;
 			m_DeathTimer = 5.0f;
 
 			m_NumberOfCivs = 0;
@@ -728,7 +793,7 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 
 			for (int index{ 0 }; index < m_VectorNPCs.size(); ++index)
 			{
-				m_VectorNPCs[index]->SetAlive();
+				m_VectorNPCs[index]->SetAlive(true);
 				m_VectorNPCs[index]->SetPos(Point2f{ GenerateX(), GenerateY() });
 			}
 

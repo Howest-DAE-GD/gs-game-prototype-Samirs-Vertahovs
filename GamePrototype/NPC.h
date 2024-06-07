@@ -17,7 +17,7 @@ public:
 	bool DoHitTest(const Rectf& bullet);
 	void SetPos(const Point2f& pos);
 	void SetDimensions(float width, float height);
-	void SetAlive();
+	void SetAlive(bool setter);
 	void SetHostility(bool isEnemy);
 
 	void Shoot(const Point2f& direction);

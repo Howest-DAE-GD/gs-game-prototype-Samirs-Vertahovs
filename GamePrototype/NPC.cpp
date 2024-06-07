@@ -156,9 +156,9 @@ Point2f NPC::GetPosition() const
 	return m_Position;
 }
 
-void NPC::SetAlive()
+void NPC::SetAlive(bool setter)
 {
-	m_IsDead = false;
+	m_IsDead = !setter;
 }
 
 void NPC::SetHostility(bool isEnemy)

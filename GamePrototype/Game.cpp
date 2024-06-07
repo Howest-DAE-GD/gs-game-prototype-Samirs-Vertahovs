@@ -168,14 +168,6 @@ void Game::Update( float elapsedSec )
 		m_DeathTimer -= elapsedSec;
 	}
 
-	//if (pStates[SDL_SCANCODE_P])
-	//{
-	//	m_GameState = GameState::level3play;
-	//	//m_KilledEnemiesCurrentLvl = 4;
-	//	m_Timer = 50.0f;
-	//}
-
-
 	if (m_DeathTimer <= 0 and m_GameState != GameState::finale and m_GameState != GameState::finalespecial)
 	{
 		m_ptrPlayer->Die();
@@ -229,11 +221,6 @@ void Game::Update( float elapsedSec )
 	m_StringDeathTimer = str;
 
 	m_StringTimer = std::to_string(int(m_Timer));
-
-	/*std::cout << m_KilledCivsCurrentLvl << std::endl;
-	std::cout << m_KilledEnemiesCurrentLvl << std::endl;
-	std::cout << m_KilledCivsTotal << std::endl;
-	std::cout << m_KilledEnemiesTotal << std::endl;*/
 
 	// Level switch
 

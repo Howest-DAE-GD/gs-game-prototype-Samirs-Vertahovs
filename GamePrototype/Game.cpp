@@ -796,7 +796,7 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 
 			for (int index{}; index < m_VectorNPCs.size(); ++index)
 			{
-				if (m_NumberOfCivs < 5)
+				if (m_NumberOfCivs < 4)
 				{
 					int indexToChange{ int(rand() % m_VectorNPCs.size()) };
 
